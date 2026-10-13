@@ -53,11 +53,11 @@ def download_single_audio(url, output_path, index, total):
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-            title = info.get('title', 'Unknown')
-            print(f"[{index}/{total}] Downloading: {title}")
-            ydl.download([url])
-            print(f"[{index}/{total}] ✓ Complete: {title}")
+            print(f"[{index}/{total}] Starting: {url}")
+            # Single pass: a separate extract_info(download=False) doubles the
+            # player-API hits and YouTube 403s the second URL.
+            info = ydl.extract_info(url)
+            print(f"[{index}/{total}] ✓ Complete: {info.get('title', 'Unknown')}")
             return (url, True, None)
     except Exception as e:
         print(f"[{index}/{total}] ✗ Error: {url} - {str(e)}")
